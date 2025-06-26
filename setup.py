@@ -5,6 +5,7 @@ setuptools.setup(
     version="0.0.6",
     author="Ellie Jones",
     author_email="ellie@altaml.com",
+    license="MIT",
     description="Plotly chart component for Streamlit that also allows for events to bubble back up to Streamlit.",
     long_description="Plotly chart component for Streamlit that also allows for events to bubble back up to Streamlit.",
     long_description_content_type="text/plain",
