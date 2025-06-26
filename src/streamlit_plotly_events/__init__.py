@@ -19,24 +19,13 @@ _RELEASE = True
 # your component frontend. Everything else we do in this file is simply a
 # best practice.
 
-if not _RELEASE:
-    _component_func = components.declare_component(
-        # We give the component a simple, descriptive name ("my_component"
-        # does not fit this bill, so please choose something better for your
-        # own component :)
-        "plotly_events",
-        # Pass `url` here to tell Streamlit that the component will be served
-        # by the local dev server that you run via `npm run start`.
-        # (This is useful while your component is in development.)
-        url="http://localhost:3001",
-    )
-else:
-    # When we're distributing a production version of the component, we'll
-    # replace the `url` param with `path`, and point it to to the component's
-    # build directory:
-    parent_dir = os.path.dirname(os.path.abspath(__file__))
-    build_dir = os.path.join(parent_dir, "frontend/build")
-    _component_func = components.declare_component("plotly_events", path=build_dir)
+
+# When we're distributing a production version of the component, we'll
+# replace the `url` param with `path`, and point it to to the component's
+# build directory:
+parent_dir = os.path.dirname(os.path.abspath(__file__))
+build_dir = os.path.join(parent_dir, "frontend/build")
+_component_func = components.declare_component("plotly_events", path=build_dir)
 
 
 # Create a wrapper function for the component. This is an optional
@@ -107,44 +96,3 @@ def plotly_events(
 
     # Parse component_value since it's JSON and return to Streamlit
     return loads(component_value)
-
-
-# Add some test code to play with the component while it's in development.
-# During development, we can run this just as we would any other Streamlit
-# app: `$ streamlit run src/streamlit_plotly_events/__init__.py`
-if not _RELEASE:
-    import streamlit as st
-    import plotly.express as px
-
-    st.set_page_config(layout="wide")
-
-    st.subheader("Plotly Line Chart")
-    fig = px.line(x=[0, 1, 2, 3], y=[0, 1, 2, 3])
-    plot_name_holder = st.empty()
-    clickedPoint = plotly_events(fig, key="line")
-    plot_name_holder.write(f"Clicked Point: {clickedPoint}")
-
-    # Here we add columns to check auto-resize/etc
-    st.subheader("Plotly Bar Chart (With columns)")
-    _, c2, _ = st.beta_columns((1, 6, 1))
-    with c2:
-        fig2 = px.bar(x=[0, 1, 2, 3], y=[0, 1, 2, 3])
-        plot_name_holder2 = st.empty()
-        clickedPoint2 = plotly_events(fig2, key="bar")
-        plot_name_holder2.write(f"Clicked Point: {clickedPoint2}")
-
-    st.subheader("# Plotly Select Event")
-    fig3 = px.bar(x=[0, 1, 2, 3], y=[0, 1, 2, 3])
-    plot_name_holder3 = st.empty()
-    clickedPoint3 = plotly_events(
-        fig3, key="select", click_event=False, select_event=True
-    )
-    plot_name_holder3.write(f"Selected Point: {clickedPoint3}")
-
-    st.subheader("# Plotly Hover Event")
-    fig4 = px.bar(x=[0, 1, 2, 3], y=[0, 1, 2, 3])
-    plot_name_holder4 = st.empty()
-    clickedPoint4 = plotly_events(
-        fig4, key="hover", click_event=False, hover_event=True
-    )
-    plot_name_holder4.write(f"Hovered Point: {clickedPoint4}")
